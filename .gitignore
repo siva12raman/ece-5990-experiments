@@ -140,3 +140,5 @@ temp/
 
 *.index
 *.pkl
+
+*.story

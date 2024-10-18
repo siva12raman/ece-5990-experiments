@@ -22,7 +22,7 @@ def generate_response(query, context):
     url = "https://api.together.xyz/v1/chat/completions"
     
     messages = [
-        {"role": "system", "content": "You are an expert on C and C++ programming languages. Use the following context to answer the user's question: " + context},
+        {"role": "system", "content": "Use the following context to answer the user's question: " + context},
         {"role": "user", "content": query}
     ]
     
@@ -50,23 +50,21 @@ def generate_response(query, context):
         return f"Error: {response.status_code}, {response.text}"
 
 def main(query):
-    index = load_faiss_index("embeddings/wikipedia_c_cpp.index")
-    chunks = load_chunks("embeddings/chunks.pkl")
+    index = load_faiss_index("../embeddings/newsqa-data-v0.index")
+    chunks = load_chunks("../embeddings/newsqa-data-v0.index.pkl")
     model = SentenceTransformer('all-MiniLM-L6-v2')
     relevant_chunks = process_query(query, index, chunks, model)
     context = "\n".join(relevant_chunks)
-    print(f"retrieved chunks: {context}")
-    print(f"-"* 100)
-    
+
     response = generate_response(query, context)
 
     return response
 
 if __name__ == "__main__":
-    # enter your query here
-    # usage - export TOGETHER_API_KEY='<your key>'
-    user_query = """
-        What are the differences between C and C++?
-    """
-    answer = main(user_query.strip())
-    print(answer)
+        # enter your query here
+        # usage - export TOGETHER_API_KEY='<your key>'
+        user_query = """
+            How many years old was the businessman?
+        """
+        answer = main(user_query.strip())
+        print(answer)
